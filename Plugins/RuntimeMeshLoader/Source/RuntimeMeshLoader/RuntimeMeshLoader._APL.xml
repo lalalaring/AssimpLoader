@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.SolidCore.MLARA">
+
+	<init>
+		<log text="Runtime mesh loader init"/>
+	</init>
+  <trace enable="true"/>
+    
+	<gameActivityImportAdditions>
+	  <insert>
+      import android.os.Environment;
+      import java.io.File;
+    </insert>
+  </gameActivityImportAdditions>
+  
+  <androidManifestUpdates>
+		<addPermission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  </androidManifestUpdates>
+
+  <gameActivityClassAdditions>
+		<insert>
+
+      public String getExternalDir()
+      {
+      Log.debug("MLARALOG: GetExternalDir");
+      String sdcardpath = "";
+      if (new File("mnt/sdcard/external_sd/").exists())
+      {
+      sdcardpath = "mnt/sdcard/external_sd/";
+      }
+      if (new File("mnt/extsdcard/").exists())
+      {
+      sdcardpath = "mnt/extsdcard/";
+      }
+      if (new File("mnt/external_sd/").exists())
+      {
+      sdcardpath = "mnt/external_sd/";
+      }
+      if (new File("mnt/emmc/").exists())
+      {
+      sdcardpath = "mnt/emmc/";
+      }
+      if (new File("mnt/sdcard0/").exists())
+      {
+      sdcardpath = "mnt/sdcard0/";
+      }
+      if (new File("mnt/sdcard1/").exists())
+      {
+      sdcardpath = "mnt/sdcard1/";
+      }
+      if (new File("mnt/sdcard/").exists())
+      {
+      sdcardpath = "mnt/sdcard/";
+      }
+      return sdcardpath;
+      }
+
+      public void copyToGallery(String ScreenshotPath)
+      {
+      // the file to be moved or copied
+      File sourceLocation = new File(Environment.getExternalStorageDirectory().getPath() + ScreenshotPath);
+
+      File targetLocation;
+
+      int ScreenshotIndex = 0;
+      boolean IsScreenshotExist = false;
+
+      do
+      {
+          targetLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath() + "/MLARAScreenshot" + String.valueOf(ScreenshotIndex) + ".png");
+          IsScreenshotExist = targetLocation.exists();
+          ScreenshotIndex++;
+      } while(IsScreenshotExist);
+
+      // just to take note of the location sources
+      Log.debug("sourceLocation: " + sourceLocation);
+      Log.debug("targetLocation: " + targetLocation);
+
+      if(sourceLocation.exists())
+      {
+      try
+      {
+      if (sourceLocation.renameTo(targetLocation))
+      {
+      Log.debug("Move file successful.");
+      }
+      else
+      {
+      Log.debug("Move file failed.");
+      }
+      }
+      catch (Exception e)
+      {
+      e.printStackTrace();
+      }
+      }
+      else
+      Log.debug("Source location does not exitst");
+      }
+
+    </insert>
+	</gameActivityClassAdditions>
+
+</root>
